@@ -12,13 +12,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun setupBottomNavigation() {
         bottom_navigation_view.enableAnimation(false)
-        bottom_navigation_view.enableItemShiftingMode(false)
-        bottom_navigation_view.enableShiftingMode(false)
-        bottom_navigation_view.enableAnimation(false)
+        bottom_navigation_view.isItemHorizontalTranslationEnabled = false
+        bottom_navigation_view.labelVisibilityMode = 1
         bottom_navigation_view.setIconSize(29f, 29f)
-        for (index in 0 until bottom_navigation_view.menu.size()) {
-            bottom_navigation_view.setIconTintList(index, null)
-        }
         bottom_navigation_view.setOnNavigationItemSelectedListener {
             val nextActivity = when (it.itemId) {
                 R.id.home_nav_item -> HomeActivity::class.java
