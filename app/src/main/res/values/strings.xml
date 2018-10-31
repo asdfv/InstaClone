@@ -7,4 +7,8 @@
     <string name="edit_profile_phone">Phone</string>
     <string name="edit_profile_private_information">Private information</string>
     <string name="edit_profile_bio">Bio</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="login_sign_up">Don\'t have account? <b>Sign up.</b></string>
 </resources>
