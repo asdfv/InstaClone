@@ -18,13 +18,8 @@ class HomeActivity : BaseActivity() {
         setContentView(R.layout.activity_home)
         setupBottomNavigation()
         Log.d(TAG, "onCreate")
-
-
         mAuth = FirebaseAuth.getInstance()
         mAuth.signOut()
-//        auth.signInWithEmailAndPassword("it@grodno.net", "password").addOnCompleteListener {
-//            handleResult(it)
-//        }
     }
 
     override fun onStart() {
@@ -34,12 +29,4 @@ class HomeActivity : BaseActivity() {
             finish()
         }
     }
-
-//    private fun handleResult(result: Task<AuthResult>) {
-//        if (result.isSuccessful) {
-//            Log.d(TAG, "SignIn success")
-//        } else {
-//            Log.d(TAG, "SignIn failure: ${result.exception}")
-//        }
-//    }
 }
