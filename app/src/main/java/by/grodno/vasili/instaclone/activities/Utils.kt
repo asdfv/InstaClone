@@ -1,6 +1,8 @@
-package by.grodno.vasili.instaclone
+package by.grodno.vasili.instaclone.activities
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -15,4 +17,8 @@ class ValueEventListenerAdapter(val handler: (DataSnapshot) -> Unit) : ValueEven
     override fun onDataChange(data: DataSnapshot) {
         handler(data)
     }
+}
+
+fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, message, duration).show()
 }

@@ -1,4 +1,4 @@
-package by.grodno.vasili.instaclone
+package by.grodno.vasili.instaclone.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import by.grodno.vasili.instaclone.R
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -36,10 +36,6 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
             .addOnCompleteListener { handleResult(it) }
     }
 
-    /**
-     * KeyboardVisibilityEventListener
-     */
-
     override fun onVisibilityChanged(isKeyboardOpen: Boolean) {
         if (isKeyboardOpen) {
             scroll_view.scrollTo(0, scroll_view.bottom)
@@ -50,10 +46,6 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
         }
     }
 
-    /**
-     * TextWatcher
-     */
-
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -62,15 +54,11 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
         login_button.isEnabled = validate(email_input.text.toString(), password_input.text.toString())
     }
 
-    /**
-     * Private API
-     */
-
     private fun validate(email: String, password: String) = email.isNotEmpty() && password.isNotEmpty()
 
     private fun handleResult(result: Task<AuthResult>) {
         if (!result.isSuccessful) {
-            Toast.makeText(this, "Wrong email or password", Toast.LENGTH_SHORT).show()
+            showToast("Wrong email or password")
             Log.d(TAG, "SignIn failure: ${result.exception}")
             return
         }

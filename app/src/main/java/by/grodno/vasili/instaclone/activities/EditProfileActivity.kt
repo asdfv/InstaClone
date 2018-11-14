@@ -1,9 +1,10 @@
-package by.grodno.vasili.instaclone
+package by.grodno.vasili.instaclone.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.TextView.BufferType.EDITABLE
+import by.grodno.vasili.instaclone.R
 import by.grodno.vasili.instaclone.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -29,7 +30,11 @@ class EditProfileActivity : AppCompatActivity() {
             return
         }
         database.child("users").child(currentUser.uid)
-            .addListenerForSingleValueEvent(ValueEventListenerAdapter(::fillProfileFields))
+            .addListenerForSingleValueEvent(
+                ValueEventListenerAdapter(
+                    ::fillProfileFields
+                )
+            )
     }
 
     private fun fillProfileFields(data: DataSnapshot) {
