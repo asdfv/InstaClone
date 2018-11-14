@@ -1,0 +1,10 @@
+package by.grodno.vasili.instaclone.models
+
+data class User(
+    val name: String = "",
+    val username: String = "",
+    val website: String = "",
+    val email: String = "",
+    val phone: String = "",
+    val bio: String = ""
+)

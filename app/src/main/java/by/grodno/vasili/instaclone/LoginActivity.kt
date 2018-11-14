@@ -1,11 +1,13 @@
 package by.grodno.vasili.instaclone
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -53,24 +55,25 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
      */
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
     override fun afterTextChanged(s: Editable?) {
-        login_button.isEnabled = isTextEntered()
+        login_button.isEnabled = validate(email_input.text.toString(), password_input.text.toString())
     }
 
     /**
      * Private API
      */
 
-    private fun isTextEntered(): Boolean =
-        email_input.text.toString().isNotEmpty() && password_input.text.toString().isNotEmpty()
+    private fun validate(email: String, password: String) = email.isNotEmpty() && password.isNotEmpty()
 
     private fun handleResult(result: Task<AuthResult>) {
         if (!result.isSuccessful) {
+            Toast.makeText(this, "Wrong email or password", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "SignIn failure: ${result.exception}")
             return
         }
-        Log.d(TAG, "SignIn success")
-        // TODO: Navigate to home
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 }
