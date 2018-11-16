@@ -21,8 +21,8 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        KeyboardVisibilityEvent.setEventListener(this, this)
         login_button.isEnabled = false
+        KeyboardVisibilityEvent.setEventListener(this, this)
         email_input.addTextChangedListener(this)
         password_input.addTextChangedListener(this)
     }
@@ -34,6 +34,11 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
         val password = password_input.text.toString()
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { handleResult(it) }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun goRegister(view: View) {
+        startActivity(Intent(this, RegisterActivity::class.java))
     }
 
     override fun onVisibilityChanged(isKeyboardOpen: Boolean) {
@@ -51,10 +56,12 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
     override fun afterTextChanged(s: Editable?) {
-        login_button.isEnabled = validate(email_input.text.toString(), password_input.text.toString())
+        login_button.isEnabled =
+                validate(email_input.text.toString(), password_input.text.toString())
     }
 
-    private fun validate(email: String, password: String) = email.isNotEmpty() && password.isNotEmpty()
+    private fun validate(email: String, password: String) =
+        email.isNotEmpty() && password.isNotEmpty()
 
     private fun handleResult(result: Task<AuthResult>) {
         if (!result.isSuccessful) {
