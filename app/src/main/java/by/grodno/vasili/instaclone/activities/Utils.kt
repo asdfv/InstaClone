@@ -1,7 +1,9 @@
 package by.grodno.vasili.instaclone.activities
 
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,6 +21,13 @@ class ValueEventListenerAdapter(val handler: (DataSnapshot) -> Unit) : ValueEven
     }
 }
 
-fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+fun Context.showToast(message: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, message, duration).show()
 }
+
+fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(activity, message, duration).show()
+}
+
+fun String.isValidEmail(): Boolean =
+    this.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()

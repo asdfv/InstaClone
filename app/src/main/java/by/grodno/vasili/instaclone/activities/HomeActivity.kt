@@ -22,12 +22,10 @@ class HomeActivity : BaseActivity() {
         Log.d(TAG, "onCreate")
 
         home_label.setOnClickListener {
-            println("signOut pressed")
             mAuth.signOut()
         }
 
         mAuth.addAuthStateListener {
-            println("signOut AuthStateListener, current user = ${it.currentUser}")
             if (it.currentUser == null) {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()

@@ -43,7 +43,7 @@ class EditProfileActivity : AppCompatActivity() {
             Log.e(TAG, "Error converting DataSnapshot ${data.key} to User")
             return
         }
-        name_input.setText(user.name, EDITABLE)
+        full_name_input.setText(user.name, EDITABLE)
         username_input.setText(user.username, EDITABLE)
         email_input.setText(user.email, EDITABLE)
         website_input.setText(user.website, EDITABLE)

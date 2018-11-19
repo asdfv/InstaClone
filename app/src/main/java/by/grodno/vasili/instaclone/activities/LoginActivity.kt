@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, Text
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun goRegister(view: View) {
+    fun startRegister(view: View) {
         startActivity(Intent(this, RegisterActivity::class.java))
     }
 
