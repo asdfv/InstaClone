@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<by.grodno.vasili.instaclone.views.KeyboardAwareScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="none"
     >
 
     <android.support.constraint.ConstraintLayout
@@ -16,7 +14,7 @@
         tools:context=".activities.LoginActivity"
         >
 
-        <android.support.v7.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/instagram_image"
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -65,4 +63,4 @@
             />
 
     </android.support.constraint.ConstraintLayout>
-</ScrollView>
+</by.grodno.vasili.instaclone.views.KeyboardAwareScrollView>

@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import by.grodno.vasili.instaclone.R
+import by.grodno.vasili.instaclone.constants.FirebaseConstants.Companion.USERS_DOC
+import by.grodno.vasili.instaclone.exceptions.UnknownException
 import by.grodno.vasili.instaclone.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -35,9 +37,9 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
         }
     }
 
-    override fun onNext(email: String) {
+    override fun onNext(email: String){
         mEmail = email
-        presentNamePassFragment()
+        checkEmailExists(email)
     }
 
     override fun onRegister(fullName: String, password: String) {
@@ -48,7 +50,7 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             return
         }
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (it.exception != null) {
+            if (!it.isSuccessful) {
                 Log.e(TAG, "Error saving user auth: ${it.exception}")
                 showToast("Error in email or password, please recheck it")
                 supportFragmentManager.popBackStack()
@@ -59,9 +61,24 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
         }
     }
 
+    private fun checkEmailExists(email: String) {
+        mAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (task.result?.signInMethods.isNullOrEmpty()) {
+                    presentNamePassFragment()
+                } else {
+                    showToast("This email already exists")
+                }
+            } else {
+                val exception = task.exception ?: UnknownException("Error while fetching SignIn methods")
+                showToast("${exception.message}")
+            }
+        }
+    }
+
     private fun saveUser(userId: String, fullName: String, email: String) {
         mDatabase
-            .child("users")
+            .child(USERS_DOC)
             .child(userId)
             .setValue(createUser(fullName, email))
             .addOnCompleteListener {
@@ -112,6 +129,7 @@ class EmailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        disableButtonForEmptyInputs(next_btn, email_input)
         next_btn.setOnClickListener {
             val email = email_input.text.toString()
             if (email.isValidEmail()) {
@@ -140,6 +158,7 @@ class NamePassFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        disableButtonForEmptyInputs(register_button, full_name_input, password_input)
         register_button.setOnClickListener {
             val fullName = full_name_input.text.toString()
             val password = password_input.text.toString()
