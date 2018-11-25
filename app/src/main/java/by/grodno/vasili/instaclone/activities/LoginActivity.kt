@@ -8,22 +8,33 @@ import android.view.View
 import by.grodno.vasili.instaclone.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener {
+class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener, CoroutineScope {
     private val TAG = this::class.java.simpleName
+    private lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        job = Job()
         disableButtonForEmptyInputs(login_button, email_input, password_input)
         setListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 
     override fun onVisibilityChanged(isKeyboardOpen: Boolean) {
@@ -33,7 +44,7 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener {
     private fun setListeners() {
         KeyboardVisibilityEvent.setEventListener(this, this)
         login_button.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            launch(Dispatchers.Main) {
                 login()
             }
         }
@@ -48,6 +59,7 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener {
         val password = password_input.text.toString()
         if (signIn(mAuth, email, password)) {
             startActivity(Intent(this, HomeActivity::class.java))
+            finish()
         } else {
             showToast("Authentication failed")
         }
