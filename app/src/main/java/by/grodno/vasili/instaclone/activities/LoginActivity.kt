@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import by.grodno.vasili.instaclone.R
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener {
     private val TAG = this::class.java.simpleName
@@ -19,34 +22,46 @@ class LoginActivity : AppCompatActivity(), KeyboardVisibilityEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        KeyboardVisibilityEvent.setEventListener(this, this)
         disableButtonForEmptyInputs(login_button, email_input, password_input)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    fun login(view: View) {
-        val mAuth = FirebaseAuth.getInstance()
-        val email = email_input.text.toString()
-        val password = password_input.text.toString()
-        mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { handleResult(it) }
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    fun startRegister(view: View) {
-        startActivity(Intent(this, RegisterActivity::class.java))
+        setListeners()
     }
 
     override fun onVisibilityChanged(isKeyboardOpen: Boolean) {
         sign_up_toolbar.visibility = if (isKeyboardOpen) View.GONE else View.VISIBLE
     }
 
-    private fun handleResult(result: Task<AuthResult>) {
-        if (!result.isSuccessful) {
-            showToast("Wrong email or password")
-            Log.d(TAG, "SignIn failure: ${result.exception}")
-            return
+    private fun setListeners() {
+        KeyboardVisibilityEvent.setEventListener(this, this)
+        login_button.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                login()
+            }
         }
-        startActivity(Intent(this, HomeActivity::class.java))
+        sign_up_toolbar.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
     }
+
+    private suspend fun login() {
+        val mAuth = FirebaseAuth.getInstance()
+        val email = email_input.text.toString()
+        val password = password_input.text.toString()
+        if (signIn(mAuth, email, password)) {
+            startActivity(Intent(this, HomeActivity::class.java))
+        } else {
+            showToast("Authentication failed")
+        }
+    }
+
+    private suspend fun signIn(mAuth: FirebaseAuth, email: String, password: String) =
+        suspendCoroutine<Boolean> { cont ->
+            mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    val successful = task.isSuccessful
+                    cont.resume(successful)
+                    if (!successful) {
+                        Log.d(TAG, "SignIn failure: ${task.exception}")
+                    }
+                }
+        }
 }

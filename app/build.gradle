@@ -41,6 +41,8 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 }
 
 apply plugin: 'com.google.gms.google-services'

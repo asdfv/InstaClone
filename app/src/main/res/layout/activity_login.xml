@@ -46,7 +46,6 @@
         <Button
             android:id="@+id/login_button"
             style="@style/login_button"
-            android:onClick="login"
             android:text="@string/log_in"
             app:layout_constraintTop_toBottomOf="@id/password_input"
             />
@@ -59,7 +58,6 @@
             android:gravity="center"
             android:text="@string/login_sign_up"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="startRegister"
             />
 
     </android.support.constraint.ConstraintLayout>
